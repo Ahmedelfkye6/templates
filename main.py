@@ -21,7 +21,8 @@ import webbrowser
 Window.size = (460, 640)
 Window.clearcolor = (0.15, 0.15, 0.15, 1)
 
-class ModernUI(App):
+# تم تغيير الاسم هنا لـ MainApp لضمان قراءة دالة build على الأندرويد
+class MainApp(App):
     def build(self):
         self.title = "VideoFX Studio By Decoy"
         
@@ -216,7 +217,7 @@ class ModernUI(App):
         close_btn.bind(on_press=popup.dismiss)
         popup.open()
 
-# ----------------- Binary patch functions (نفس الكود الأصلي تماماً) -----------------
+# ----------------- Binary patch functions -----------------
 def patch_param1(buf, timescale_divisor, duration_divisor):
     patched = 0
     offset = 0
@@ -317,5 +318,6 @@ def run_patch(filepath, timescale_divisor=5.0, duration_divisor=5.0):
         fh.write(buf)
     return out, c1, c2
 
+# تم تعديل طريقة التشغيل لتعمل بالتوافق مع اسم الكلاس الجديد
 if __name__ == '__main__':
-    ModernUI().run()
+    MainApp().run()
