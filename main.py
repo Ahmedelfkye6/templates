@@ -168,4 +168,3 @@ class VideoFXAndroidApp(App):
 
 if __name__ == '__main__':
     VideoFXAndroidApp().run()
-    print("ahmed")
