@@ -21,7 +21,7 @@ jobs:
         run: docker run -i -v $PWD:/srv -w/srv local /bin/bash ./tools/build/build_android.sh
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: package
           path: build/android/bin/*.apk
