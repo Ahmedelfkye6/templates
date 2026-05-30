@@ -48,9 +48,9 @@ jobs:
     - name: Build Android APK
       run: |
         buildozer android debug
-        
+
     - name: Upload APK Artifact
-      uses: actions/artifacts@v4
+      uses: actions/upload-artifact@v4
       with:
         name: VideoFX-Android-APK
         path: bin/*.apk
