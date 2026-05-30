@@ -1,28 +1,56 @@
 name: Android Buildozer
+
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  schedule:
-    - cron: '0 0 1,15 * *'
+    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    # تم تبسيط الشرط هنا ليشتغل مع كل push عادي أو عند كتابة الأمر
-    if: github.event_name == 'push' || contains(github.event.head_commit.message, '[build android apk]')
 
     steps:
-      - uses: actions/checkout@v3
-      - name: setup docker
-        id: buildozer
-        run: docker build . -t local -f tools/build/build_android.dockerfile
-      - name: build with buildozer
-        run: docker run -i -v $PWD:/srv -w/srv local /bin/bash ./tools/build/build_android.sh
+    - name: Checkout Cloud Code
+      uses: actions/checkout@v4
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: package
-          path: build/android/bin/*.apk
+    - name: Get Date
+      # لعمل كاش للملفات وتسريع البناء
+      id: get-date
+      run: |
+        echo "date=$(date -u +'%Y%m%d')" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Cache Buildozer venv
+      uses: actions/cache@v4
+      with:
+        path: .buildozer
+        key: ${{ runner.os }}-buildozer-${{ steps.get-date.outputs.date }}
+
+    - name: Set up JDK 17
+      # أندرويد API 35 والأنظمة الحديثة بتحتاج جافا 17 مجبرة عشان تتبني
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential libsqlite3-dev sqlite3 bzip2 libbz2-dev zlib1g-dev libssl-dev openssl libgdbm-dev libgdbm-compat-dev liblzma-dev libreadline-dev libncursesw5-dev libffi-dev uuid-dev tar
+        pip install --upgrade pip
+        pip install buildozer cython virtualenv kivy
+
+    - name: Build Android APK
+      run: |
+        buildozer android debug
+        
+    - name: Upload APK Artifact
+      uses: actions/artifacts@v4
+      with:
+        name: VideoFX-Android-APK
+        path: bin/*.apk
