@@ -78,8 +78,9 @@ fullscreen = 0
 # (list) Permissions
 android.permissions = READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE, MANAGE_EXTERNAL_STORAGE
 
+android.permissions = READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE, MANAGE_EXTERNAL_STORAGE, READ_MEDIA_VIDEO⁠
 # (int) Target Android API, should be as high as possible.
-android.api = 33
+android.api = 35
 
 # (int) Minimum API your APK / AAB will support.
 android.minapi = 24
