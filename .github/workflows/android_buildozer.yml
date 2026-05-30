@@ -10,7 +10,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # تغيير إصدار Ubuntu إلى 22.04
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout Cloud Code
@@ -32,7 +33,10 @@ jobs:
         echo "Updating system and installing dependencies..."
         sudo apt-get update -y
         sudo apt-get upgrade -y
-        sudo apt-get install -y --no-install-recommends build-essential libsqlite3-dev sqlite3 bzip2 libbz2-dev zlib1g-dev libssl-dev openssl libgdbm-dev libgdbm-compat-dev liblzma-dev libreadline-dev libncursesw5-dev libffi-dev uuid-dev tar lld libncurses5
+        # استخدام البدائل أو الحزم الأحدث
+        sudo apt-get install -y --no-install-recommends build-essential libsqlite3-dev sqlite3 bzip2 libbz2-dev zlib1g-dev libssl-dev openssl libgdbm-dev libgdbm-compat-dev liblzma-dev libreadline-dev libffi-dev uuid-dev tar lld
+        # تثبيت `libncurses6` كبديل للحزمة المفقودة
+        sudo apt-get install -y libncurses6
         echo "Installing Python packages with pip..."
         pip install --upgrade pip
         pip install buildozer cython virtualenv kivy
