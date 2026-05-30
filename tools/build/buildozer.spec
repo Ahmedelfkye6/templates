@@ -1,56 +1,26 @@
 [app]
-
-# (str) Title of your application
 title = VideoFX Studio
-
-# (str) Package name
 package.name = videofxstudio
-
-# (str) Package domain (needed for android/ios packaging)
 package.domain = org.test.videofxstudio
-
-# (str) Source code where the main.py live
 source.dir = .
-
-# (list) Source files to include (let empty to include all the files)
 source.include_exts = py,png,jpg,kv,atlas
-
-# (str) Application versioning
 version = 0.1
-
-# (list) Application requirements
 requirements = python3,kivy
 
 orientation = portrait
-
-#
-# Android specific
-#
-
 fullscreen = 0
 
-# (list) Permissions
+# الأذونات الأساسية فقط، والباقي الـ main.py هيطلبه ديناميكياً
 android.permissions = INTERNET,READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE
 
-# (int) Target Android API
-android.api = 35
-
-# (int) Minimum API
-android.minapi = 24
-
-# (str) Android NDK version to use
+android.api = 33
+android.minapi = 21
 android.ndk = 25b
-
-# (int) Android NDK API to use
-android.ndk_api = 24
+android.ndk_api = 21
 
 android.accept_sdk_license = True
-
 android.enable_androidx = True
-
-# (list) The Android archs to build for
 android.archs = arm64-v8a, armeabi-v7a
-
 android.allow_backup = True
 
 [buildozer]
