@@ -43,9 +43,17 @@ jobs:
         pip install --upgrade pip
         pip install buildozer cython virtualenv kivy
 
+    - name: Accept Android SDK Licenses
+      # هذه الخطوة لحل exit code 100 وقبول الشروط تلقائياً
+      run: |
+        mkdir -p ~/.android
+        touch ~/.android/repositories.cfg
+        yes | sdkmanager --licenses || true
+
     - name: Build Android APK
       run: |
-        buildozer android debug
+        # أضفنا أمر القبول المباشر لضمان عدم التهنيج
+        yes | buildozer android debug
         
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
