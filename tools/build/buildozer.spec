@@ -10,8 +10,8 @@ requirements = python3,kivy
 orientation = portrait
 fullscreen = 0
 
-# الأذونات الأساسية فقط، والباقي الـ main.py هيطلبه ديناميكياً
-android.permissions = INTERNET,READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE
+# الأذونات المتوافقة تماماً مع الأكواد الجديدة في main.py لمنع الكراش
+android.permissions = INTERNET, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE, android.permission.READ_MEDIA_VIDEO, android.permission.READ_MEDIA_IMAGES
 
 android.api = 33
 android.minapi = 21
