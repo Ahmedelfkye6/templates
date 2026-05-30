@@ -16,8 +16,8 @@ jobs:
     steps:
     - name: Install tar
       run: |
-        sudo apt-get update -y
-        sudo apt-get install -y tar
+        apt-get update -y
+        apt-get install -y tar
 
     - name: Checkout Code
       uses: actions/checkout@v5
@@ -36,8 +36,8 @@ jobs:
     - name: Install Dependencies
       run: |
         echo "Updating system and installing necessary packages..."
-        sudo apt-get update -y
-        sudo apt-get install -y --no-install-recommends build-essential libsqlite3-dev sqlite3 bzip2 libbz2-dev zlib1g-dev libssl-dev openssl libgdbm-dev libgdbm-compat-dev liblzma-dev libreadline-dev libffi-dev uuid-dev tar lld libncurses5 || sudo apt-get install -y libncurses6
+        apt-get update -y
+        apt-get install -y --no-install-recommends build-essential libsqlite3-dev sqlite3 bzip2 libbz2-dev zlib1g-dev libssl-dev openssl libgdbm-dev libgdbm-compat-dev liblzma-dev libreadline-dev libffi-dev uuid-dev tar lld libncurses5 || apt-get install -y libncurses6
 
     - name: Install Python Packages
       run: |
