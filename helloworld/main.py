@@ -16,6 +16,18 @@ Window.clearcolor = (0.15, 0.15, 0.15, 1)
 class VideoFXAndroidApp(App):
     def build(self):
         self.title = "VideoFX Studio By Ahmed"
+
+                # طلب أذونات الملفات الشاملة المتوافقة مع أندرويد 13 (API 33) للتابلت
+        from kivy.utils import platform
+        if platform == 'android':
+            from android.permissions import request_permissions, Permission
+            # للأندرويد الحديث بنطلب الوصول الشامل عشان يقدر يعدل على باينري الفيديوهات
+            request_permissions([
+                Permission.READ_EXTERNAL_STORAGE,
+                Permission.WRITE_EXTERNAL_STORAGE,
+                "android.permission.MANAGE_EXTERNAL_STORAGE"
+            ])
+
         
         # الحاوية الرئيسية
         layout = BoxLayout(orientation='vertical', padding=20, spacing=15)
