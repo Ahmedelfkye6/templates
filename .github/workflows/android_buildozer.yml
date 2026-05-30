@@ -25,14 +25,14 @@ jobs:
         python-version: '3.11'
 
     - name: Install Dependencies
+      # ضفنا DEBIAN_FRONTEND=noninteractive و علامة -y لكل الأوامر لمنع كود 100 نهائياً
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential libsqlite3-dev sqlite3 bzip2 libbz2-dev zlib1g-dev libssl-dev openssl libgdbm-dev libgdbm-compat-dev liblzma-dev libreadline-dev libncursesw5-dev libffi-dev uuid-dev tar lld libtinfo5 auto-apt-proxy
+        sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends build-essential libsqlite3-dev sqlite3 bzip2 libbz2-dev zlib1g-dev libssl-dev openssl libgdbm-dev libgdbm-compat-dev liblzma-dev libreadline-dev libncursesw5-dev libffi-dev uuid-dev tar lld libtinfo5
         pip install --upgrade pip
         pip install buildozer cython virtualenv kivy
 
     - name: Build Android APK
-      # شيلنا أمر yes تماماً واستخدمنا عزل البيئة عشان يشتغل صامت ويعدي كود 100
       run: |
         buildozer android debug --no-interaction
         
