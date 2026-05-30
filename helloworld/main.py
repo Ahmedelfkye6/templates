@@ -17,18 +17,18 @@ class VideoFXAndroidApp(App):
     def build(self):
         self.title = "VideoFX Studio By Ahmed"
 
-                # طلب أذونات الملفات الشاملة المتوافقة مع أندرويد 13 (API 33) للتابلت
+        # طلب أذونات الملفات الشاملة والفيديوهات المتوافقة مع أندرويد 13 (API 33) للتابلت
         from kivy.utils import platform
         if platform == 'android':
             from android.permissions import request_permissions, Permission
-            # للأندرويد الحديث بنطلب الوصول الشامل عشان يقدر يعدل على باينري الفيديوهات
+            # تم إضافة إذن READ_MEDIA_VIDEO ليعمل على الأنظمة الحديثة ويظهر الملفات
             request_permissions([
+                "android.permission.READ_MEDIA_VIDEO",
                 Permission.READ_EXTERNAL_STORAGE,
                 Permission.WRITE_EXTERNAL_STORAGE,
                 "android.permission.MANAGE_EXTERNAL_STORAGE"
             ])
 
-        
         # الحاوية الرئيسية
         layout = BoxLayout(orientation='vertical', padding=20, spacing=15)
         
@@ -80,9 +80,19 @@ class VideoFXAndroidApp(App):
             self.speed_label.text = "Speed: --"
 
     def open_file_chooser(self, instance):
-        # فتح نافذة بوب أب داخل التطبيق لاختيار الملف (بديل الـ filedialog)
+        # تحديد المسار العام للتابلت لفتح المجلدات التي تحتوي على فيديوهاتك مباشرة
+        from kivy.utils import platform
+        start_path = "/storage/emulated/0/Download"
+        if platform == 'android':
+            if not os.path.exists(start_path):
+                start_path = "/storage/emulated/0/Movies"
+            if not os.path.exists(start_path):
+                start_path = "/sdcard"
+        else:
+            start_path = "."
+
         popup_layout = BoxLayout(orientation='vertical')
-        file_chooser = FileChooserIconView(filters=['*.mp4'], path='/sdcard')
+        file_chooser = FileChooserIconView(filters=['*.mp4'], path=start_path)
         popup_layout.add_widget(file_chooser)
         
         btn_layout = BoxLayout(size_hint_y=None, height='50dp', spacing=10)
@@ -117,7 +127,6 @@ class VideoFXAndroidApp(App):
             return
 
         try:
-            # دالة المعالجة المباشرة (نفس منطق كودك الأصلي الباينري)
             with open(filepath, 'rb') as fh:
                 buf = bytearray(fh.read())
             
@@ -180,4 +189,3 @@ class VideoFXAndroidApp(App):
 
 if __name__ == '__main__':
     VideoFXAndroidApp().run()
-
