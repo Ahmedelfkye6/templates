@@ -14,6 +14,11 @@ jobs:
       PATH: $PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools
 
     steps:
+    - name: Install tar
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install -y tar
+
     - name: Checkout Code
       uses: actions/checkout@v5
 
@@ -46,7 +51,6 @@ jobs:
         curl -fsSL https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip -o commandlinetools.zip
         unzip commandlinetools.zip -d $ANDROID_HOME/cmdline-tools
         mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
-        export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
 
     - name: Accept Android Licenses
       run: |
@@ -62,4 +66,19 @@ jobs:
 
     - name: Validate Buildozer Spec File
       run: |
-        echo "Validating and cleaning '
+        echo "Validating and cleaning 'buildozer.spec' file..."
+        if grep -q "^android.permissions" buildozer.spec; then
+          sed -i '/^android.permissions/!b;:a;N;/\nandroid.permissions/D;ba' buildozer.spec
+        fi
+        echo "Validation completed successfully."
+
+    - name: Build Android APK
+      run: |
+        echo "Building APK using Buildozer..."
+        buildozer android debug --no-interaction
+
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: VideoFX-Android-APK
+        path: bin/*.apk
