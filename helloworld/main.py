@@ -10,23 +10,22 @@ from kivy.uix.popup import Popup
 from kivy.uix.filechooser import FileChooserIconView
 from kivy.core.window import Window
 
-# إعداد لون خلفية افتراضي متناسق (رمادي غامق مثل كودك القديم)
+# إعداد لون خلفية افتراضي متناسق
 Window.clearcolor = (0.15, 0.15, 0.15, 1)
 
 class VideoFXAndroidApp(App):
     def build(self):
         self.title = "VideoFX Studio By Ahmed"
 
-        # طلب أذونات الملفات الشاملة والفيديوهات المتوافقة مع أندرويد 13 (API 33) للتابلت
+        # طلب أذونات الميديا والفيديوهات المتوافقة مع أندرويد 16 الشديد الحماية
         from kivy.utils import platform
         if platform == 'android':
             from android.permissions import request_permissions, Permission
-            # تم إضافة إذن READ_MEDIA_VIDEO ليعمل على الأنظمة الحديثة ويظهر الملفات
             request_permissions([
                 "android.permission.READ_MEDIA_VIDEO",
+                "android.permission.MANAGE_EXTERNAL_STORAGE",
                 Permission.READ_EXTERNAL_STORAGE,
-                Permission.WRITE_EXTERNAL_STORAGE,
-                "android.permission.MANAGE_EXTERNAL_STORAGE"
+                Permission.WRITE_EXTERNAL_STORAGE
             ])
 
         # الحاوية الرئيسية
@@ -50,18 +49,17 @@ class VideoFXAndroidApp(App):
         layout.add_widget(input_layout2)
         
         # عرض السرعة المحسوبة
-        self.speed_label = Label(text="Speed: 1.000x", font_size='16sp', bold=True, color=(0, 1, 0.73, 1))
+        self.speed_label = Label(text="Speed: 1.250x", font_size='16sp', bold=True, color=(0, 1, 0.73, 1))
         layout.add_widget(self.speed_label)
         
-        # ربط التحديث التلقائي للسرعة عند تغيير الأرقام
+        # ربط التحديث التلقائي للسرعة
         self.ts_input.bind(text=self.update_speed)
         self.dur_input.bind(text=self.update_speed)
         
-        # نصائح وتنبيهات
         layout.add_widget(Label(text="تأكد من حفظ نسخة أصلية من الفيديو قبل تعديله.\nالمقطع يفضل أن يكون 60 فريم.", 
                                 font_size='12sp', color=(0.5, 0.5, 0.5, 1), halign='center'))
         
-        # زر اختيار الفيديو والبدء
+        # زر اختيار الفيديو
         self.patch_btn = Button(text="Choose Video to Patch", size_hint_y=None, height='60dp',
                                 background_color=(0.1, 0.1, 0.1, 1), font_size='18sp')
         self.patch_btn.bind(on_press=self.open_file_chooser)
@@ -80,7 +78,7 @@ class VideoFXAndroidApp(App):
             self.speed_label.text = "Speed: --"
 
     def open_file_chooser(self, instance):
-        # تحديد المسار العام للتابلت لفتح المجلدات التي تحتوي على فيديوهاتك مباشرة
+        # تعديل المسارات للوصول للذاكرة الحقيقية في أندرويد 16
         from kivy.utils import platform
         start_path = "/storage/emulated/0/Download"
         if platform == 'android':
@@ -104,7 +102,6 @@ class VideoFXAndroidApp(App):
         popup_layout.add_widget(btn_layout)
         
         popup = Popup(title="Select MP4 File", content=popup_layout, size_hint=(0.9, 0.9))
-        
         cancel_btn.bind(on_press=popup.dismiss)
         
         def on_select(btn_instance):
@@ -123,7 +120,7 @@ class VideoFXAndroidApp(App):
             if ts_div <= 0 or dur_div <= 0:
                 raise ValueError
         except ValueError:
-            self.show_popup("Error", "الرجاء إدخال قيم صالحة أكبر من صفر")
+            self.show_popup("Error", "الرجاء إدخال قيم صالحة")
             return
 
         try:
@@ -134,13 +131,13 @@ class VideoFXAndroidApp(App):
             c2 = self.patch_atom(buf, b'mdhd', ts_div, dur_div)
             
             if c1 == 0 and c2 == 0:
-                raise RuntimeError("لم يتم العثور على ذرات mvhd/mdhd في الملف.")
+                raise RuntimeError("لم يتم العثور على ذرات mvhd/mdhd")
                 
             out_path = filepath.replace('.mp4', f'_tsdiv{int(ts_div)}_durdiv{int(dur_div)}.mp4')
             with open(out_path, 'wb') as fh:
                 fh.write(buf)
                 
-            self.show_popup("Success", f"تم التعديل بنجاح!\nالملف الجديد يحمل اسم:\n{os.path.basename(out_path)}")
+            self.show_popup("Success", f"تم التعديل بنجاح!\n{os.path.basename(out_path)}")
         except Exception as e:
             self.show_popup("Error", f"فشلت العملية:\n{str(e)}")
 
