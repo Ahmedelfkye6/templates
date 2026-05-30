@@ -17,15 +17,16 @@ class VideoFXAndroidApp(App):
     def build(self):
         self.title = "VideoFX Studio By Ahmed"
 
-        # طلب أذونات الميديا والفيديوهات المتوافقة مع أندرويد 16 الشديد الحماية
+        # طلب أذونات الميديا والفيديوهات المتوافقة مع أندرويد بالكامل
         from kivy.utils import platform
         if platform == 'android':
             from android.permissions import request_permissions, Permission
+            # تم ضبط الصلاحيات لتتوافق مع الأنظمة الحديثة والقديمة بدون كراش
             request_permissions([
-                "android.permission.READ_MEDIA_VIDEO",
-                "android.permission.MANAGE_EXTERNAL_STORAGE",
                 Permission.READ_EXTERNAL_STORAGE,
-                Permission.WRITE_EXTERNAL_STORAGE
+                Permission.WRITE_EXTERNAL_STORAGE,
+                "android.permission.READ_MEDIA_VIDEO",
+                "android.permission.READ_MEDIA_IMAGES"
             ])
 
         # الحاوية الرئيسية
@@ -69,6 +70,9 @@ class VideoFXAndroidApp(App):
 
     def update_speed(self, instance, value):
         try:
+            if not self.ts_input.text or not self.dur_input.text:
+                self.speed_label.text = "Speed: --"
+                return
             ts = float(self.ts_input.text)
             dur = float(self.dur_input.text)
             if ts <= 0 or dur <= 0:
@@ -78,7 +82,6 @@ class VideoFXAndroidApp(App):
             self.speed_label.text = "Speed: --"
 
     def open_file_chooser(self, instance):
-        # تعديل المسارات للوصول للذاكرة الحقيقية في أندرويد 16
         from kivy.utils import platform
         start_path = "/storage/emulated/0/Download"
         if platform == 'android':
