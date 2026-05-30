@@ -1,5 +1,8 @@
 name: Android Buildozer
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 on:
   push:
     branches: [ "main" ]
@@ -11,21 +14,20 @@ jobs:
 
     steps:
     - name: Checkout Cloud Code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5  # تحديث الإصدار
 
     - name: Set up JDK 17
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v5  # تحديث الإصدار
       with:
         java-version: '17'
         distribution: 'temurin'
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6  # تحديث الإصدار (عند توفره)
       with:
         python-version: '3.11'
 
     - name: Install Dependencies
-      # ضفنا DEBIAN_FRONTEND=noninteractive و علامة -y لكل الأوامر لمنع كود 100 نهائياً
       run: |
         sudo apt-get update
         sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends build-essential libsqlite3-dev sqlite3 bzip2 libbz2-dev zlib1g-dev libssl-dev openssl libgdbm-dev libgdbm-compat-dev liblzma-dev libreadline-dev libncursesw5-dev libffi-dev uuid-dev tar lld libtinfo5
