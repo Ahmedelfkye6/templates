@@ -10,7 +10,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request' && (github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag') || contains(github.event.head_commit.message, '[build android apk]')) || contains(github.event.pull_request.title, '[build android apk]')
+    # تم تبسيط الشرط هنا ليشتغل مع كل push عادي أو عند كتابة الأمر
+    if: github.event_name == 'push' || contains(github.event.head_commit.message, '[build android apk]')
 
     steps:
       - uses: actions/checkout@v3
