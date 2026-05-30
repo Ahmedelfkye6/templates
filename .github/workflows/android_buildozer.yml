@@ -14,30 +14,38 @@ jobs:
 
     steps:
     - name: Checkout Cloud Code
-      uses: actions/checkout@v5  # تحديث الإصدار
+      uses: actions/checkout@v5  # تحديث للإصدار الحديث
 
     - name: Set up JDK 17
-      uses: actions/setup-java@v5  # تحديث الإصدار
+      uses: actions/setup-java@v5  # تحديث للإصدار الحديث
       with:
         java-version: '17'
         distribution: 'temurin'
 
     - name: Set up Python
-      uses: actions/setup-python@v6  # تحديث الإصدار (عند توفره)
+      uses: actions/setup-python@v6  # تحديث للإصدار الحديث
       with:
         python-version: '3.11'
 
     - name: Install Dependencies
       run: |
+        echo "تحديث نظام التشغيل وتثبيت الأدوات الأساسية..."
         sudo apt-get update
         sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends build-essential libsqlite3-dev sqlite3 bzip2 libbz2-dev zlib1g-dev libssl-dev openssl libgdbm-dev libgdbm-compat-dev liblzma-dev libreadline-dev libncursesw5-dev libffi-dev uuid-dev tar lld libtinfo5
+        echo "تثبيت التبعيات الخاصة بـ Python باستخدام pip..."
         pip install --upgrade pip
         pip install buildozer cython virtualenv kivy
 
+    - name: Check Buildozer Requirements
+      run: |
+        echo "التأكد من تثبيت SDK و NDK إذا لزم..."
+        sudo apt-get install -y openjdk-17-jdk curl unzip libncurses5
+
     - name: Build Android APK
       run: |
+        echo "تشغيل buildozer لبناء ملف APK..."
         buildozer android debug --no-interaction
-        
+
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
